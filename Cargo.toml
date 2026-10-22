@@ -1,0 +1,55 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/xchat-crypto",
+    "crates/xchat-core",
+    "crates/xchat-transport",
+    "crates/xchat-cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["EdgeRunner xChat Team"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/EdgeRunner-runit/xChat_AP_2026"
+
+[workspace.dependencies]
+# Async & Runtime
+tokio = { version = "1.43", features = ["full"] }
+async-trait = "0.1"
+futures = "0.3"
+
+# Cryptography & Security
+x25519-dalek = { version = "2.0", features = ["static_secrets", "serde"] }
+ed25519-dalek = { version = "2.1", features = ["rand_core", "serde"] }
+chacha20poly1305 = "0.10"
+hkdf = "0.12"
+hmac = "0.12"
+sha2 = "0.10"
+rand = "0.8"
+rand_core = "0.6"
+zeroize = { version = "1.8", features = ["derive"] }
+
+# Serialization & Wire Protocol
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+bincode = "1.3"
+hex = "0.4"
+uuid = { version = "1.15", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+
+# Error Handling & Observability
+thiserror = "2.0"
+anyhow = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# CLI & Utilities
+clap = { version = "4.5", features = ["derive"] }
+tempfile = "3.17"
+
+# Internal Workspace Crates
+xchat-crypto = { path = "crates/xchat-crypto" }
+xchat-core = { path = "crates/xchat-core" }
+xchat-transport = { path = "crates/xchat-transport" }

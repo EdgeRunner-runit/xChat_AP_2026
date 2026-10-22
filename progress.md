@@ -1,0 +1,31 @@
+# Progress Log: xChat Implementation
+
+## Completed Milestones
+- [x] Cloned and analyzed base repository `EdgeRunner-runit/xChat_AP_2026`
+- [x] Documented formal 50-section Security & Cryptography Architecture (`docs/SECURITY_ARCHITECTURE.md`)
+- [x] Initialized multi-crate Cargo workspace (`crates/xchat-crypto`, `crates/xchat-core`, `crates/xchat-transport`, `crates/xchat-cli`)
+- [x] Implemented `xchat-crypto`:
+  - Ed25519 identity keys & X25519 Diffie-Hellman
+  - X3DH asynchronous key agreement (Prekey bundle, Signed prekey, One-time prekeys)
+  - Full Double Ratchet state machine with out-of-order skipped message key handling
+  - ChaCha20-Poly1305 AEAD with deterministic counter-derived nonces and bound AAD
+  - Bucketed power-of-two padding (64, 128, 256, 512, 1024, etc.)
+  - Ephemeral rotating discovery tokens
+  - `zeroize` on secrets drop
+- [x] Implemented `xchat-core`:
+  - `EncryptedEnvelope` wire format with relay-blind `RoutingHeader`
+  - Anti-replay sliding filter
+  - `StoreAndForwardQueue` with TTL pruning and encrypted disk persistence
+  - Encrypted local `KeyStore` with ChaCha20-Poly1305 at rest
+  - `RelayNode` blind store-and-forward caching
+  - `Session` coordinator binding X3DH, Double Ratchet, and AAD metadata
+- [x] Implemented `xchat-transport`:
+  - Decoupled `Transport` async trait
+  - `TcpTransport` asynchronous framed streaming for LAN / Internet
+  - `BleMeshSimulationTransport` simulating Bluetooth Low Energy / radio mesh broadcast & links
+  - `TransportManager` multi-transport router with seamless failover
+- [x] Implemented `xchat-cli`:
+  - `keygen` command generating identity addresses (`xchat_<hex>`), fingerprints, and prekey bundles
+  - `daemon` command with blind relay support
+  - `simulate-mesh` command demonstrating offline store-and-forward, BLE-to-TCP handover, and active adversarial attack blocks
+- [x] Verified all 24 automated tests + clippy + rustfmt with 0 errors/warnings.
