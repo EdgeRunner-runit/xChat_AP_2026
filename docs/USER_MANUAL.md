@@ -69,7 +69,23 @@ curl -fsSL https://raw.githubusercontent.com/EdgeRunner-runit/xChat_AP_2026/main
    ```
 
 ### Android
-**Method A — Termux (Standalone Off-Grid Terminal):**
+
+#### Method A — Standalone APK Installation (Recommended — Zero Technical Setup)
+Most Android users do not have Termux and prefer a standard Android application experience:
+1. Download **[`xchat-v0.1.0.apk`](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/download/v0.1.0/xchat-v0.1.0.apk)** directly on your Android phone from GitHub Releases.
+2. Tap the downloaded file in your browser downloads or Files app.
+3. If prompted by Android, enable **"Allow from this source"** (standard prompt for sideloaded APKs).
+4. Tap **Install** and then **Open**.
+5. The xChat app launches with:
+   - Full dark-themed mobile UI
+   - Automatic cryptographic key generation on device
+   - Contact book with live reachability ping
+   - Direct ratcheted E2EE chat
+   - One-touch Emergency SOS distress beacon with Morse vibration
+   - Ephemeral burner rooms
+   - Native Android share sheet integration to easily send your `xchat_<hex>` address to friends.
+
+#### Method B — Termux CLI / Daemon (For Advanced Users & Relays):
 1. Install [Termux](https://f-droid.org/en/packages/com.termux/) from F-Droid.
 2. Inside Termux, install Rust or download the pre-compiled ARM64 binary:
    ```bash

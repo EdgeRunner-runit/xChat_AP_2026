@@ -1,5 +1,7 @@
 /target
 /dist/
+/android/build/
+*.keystore
 **/*.rs.bk
 .DS_Store
 *.swp

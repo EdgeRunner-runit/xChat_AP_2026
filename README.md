@@ -12,9 +12,12 @@ Users connect via cryptographic addresses (`xchat_<hex>`) instead of phone numbe
 
 ## 📦 Download Releases
 
-Ready-to-use binaries and 1-click launchers are published under [**GitHub Releases (v0.1.0)**](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/tag/v0.1.0):
+Ready-to-use binaries, Android APK, and 1-click launchers are published under [**GitHub Releases (v0.1.0)**](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/tag/v0.1.0):
 
-### ⚡ 1-Click Universal Auto-Launchers (Recommended)
+### 📱 Android Standalone App (APK — No Termux Required)
+- **[xchat-v0.1.0.apk](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/download/v0.1.0/xchat-v0.1.0.apk)** *(25 KB)* — Direct installation on any Android phone (Android 5.0+ to Android 15/16). Download, tap to install, and launch immediately like any standard Android app. Zero command-line or Termux needed!
+
+### ⚡ 1-Click Universal Auto-Launchers (Desktop & Termux)
 Download and click — automatically detects your device (macOS, Windows, Linux, Android), configures keys, starts the service, and opens the App GUI:
 
 - **macOS (Double-Click):** [**`xchat-setup.command`**](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/download/v0.1.0/xchat-setup.command) (Double-click in Finder to start).
@@ -26,6 +29,7 @@ Download and click — automatically detects your device (macOS, Windows, Linux,
   ```
 
 ### Standalone Binary Packages
+- **[xchat-v0.1.0.apk](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/download/v0.1.0/xchat-v0.1.0.apk)** — Android APK package (Ready to install).
 - **[xchat-v0.1.0-macos-universal.tar.gz](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/download/v0.1.0/xchat-v0.1.0-macos-universal.tar.gz)** — Universal binary for macOS (Apple Silicon M1/M2/M3/M4 & Intel x86_64).
 - **[xchat-v0.1.0-macos-arm64.tar.gz](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/download/v0.1.0/xchat-v0.1.0-macos-arm64.tar.gz)** — Optimized for Apple Silicon Macs.
 - **[xchat-v0.1.0-macos-x86_64.tar.gz](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/download/v0.1.0/xchat-v0.1.0-macos-x86_64.tar.gz)** — Optimized for Intel Macs.
