@@ -1,8 +1,40 @@
+[![Release](https://img.shields.io/github/v/release/EdgeRunner-runit/xChat_AP_2026?color=2ea44f&logo=github)](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Build & Test](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
+
 # xChat
 
 A decentralized, peer-to-peer messaging system delivering secure, end-to-end encrypted communication across heterogeneous physical transports without reliance on central servers.
 
 Users connect via cryptographic addresses (`xchat_<hex>`) instead of phone numbers or email addresses to guarantee anonymity. This serverless, multi-transport architecture makes the network highly resistant to censorship, outages, and surveillance.
+
+---
+
+## 📦 Download Releases
+
+Ready-to-use binaries are published under [**GitHub Releases (v0.1.0)**](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/tag/v0.1.0):
+
+- **[xchat-v0.1.0-macos-universal.tar.gz](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/download/v0.1.0/xchat-v0.1.0-macos-universal.tar.gz)** — Universal binary for macOS (Apple Silicon M1/M2/M3/M4 & Intel x86_64).
+- **[xchat-v0.1.0-macos-arm64.tar.gz](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/download/v0.1.0/xchat-v0.1.0-macos-arm64.tar.gz)** — Optimized for Apple Silicon Macs.
+- **[xchat-v0.1.0-macos-x86_64.tar.gz](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/download/v0.1.0/xchat-v0.1.0-macos-x86_64.tar.gz)** — Optimized for Intel Macs.
+
+For Linux, Windows, Android (Termux), and iOS instructions, see the [**Complete User Manual**](docs/USER_MANUAL.md) and [**Hardware Field-Testing Playbook**](docs/FIELD_TEST_PLAYBOOK.md).
+
+---
+
+## 🖥️ Ready-to-Use App GUI
+
+Launch the lightweight embedded local Web GUI with a single command:
+
+```bash
+./xchat app --port 4000
+```
+Open **`http://127.0.0.1:4000`** in any web browser to access:
+- **Contact Book & Zero-Metadata Reachability Ping:** Test peer response over local wireless before chatting.
+- **Direct Messaging:** Live ratcheted conversations with offline queuing.
+- **Emergency SOS Beacon:** Instant broadcast of distress coordinates.
+- **Ephemeral Burner Rooms:** Untraceable transient group chats.
+- **Relay & Crypto Diagnostics:** Real-time visibility into ratchets, hops, and memory zeroization.
 
 ---
 
