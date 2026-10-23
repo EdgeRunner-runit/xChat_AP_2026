@@ -76,7 +76,7 @@ mod serde_sig {
 }
 
 /// Published prekey bundle allowing offline peers to initiate secure sessions asynchronously.
-#[derive(Clone, Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
 pub struct PrekeyBundle {
     pub identity_key: IdentityPublicKey,
     pub signed_prekey: [u8; 32],
