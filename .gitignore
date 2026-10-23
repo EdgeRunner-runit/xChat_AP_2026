@@ -1,4 +1,6 @@
 /target
+/dist/*.tar.gz
+/dist/*.zip
 **/*.rs.bk
 .DS_Store
 *.swp

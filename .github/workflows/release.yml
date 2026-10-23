@@ -1,0 +1,125 @@
+name: Release Builds
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-desktop:
+    name: Build Desktop - ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact_name: xchat-linux-x86_64
+            binary_name: xchat-cli
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            artifact_name: xchat-macos-arm64
+            binary_name: xchat-cli
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact_name: xchat-windows-x86_64
+            binary_name: xchat-cli.exe
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Build release binary
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Package archive (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          mkdir -p release-pkg
+          cp target/${{ matrix.target }}/release/${{ matrix.binary_name }} release-pkg/xchat
+          cp README.md docs/USER_MANUAL.md release-pkg/
+          tar -czvf ${{ matrix.artifact_name }}.tar.gz -C release-pkg .
+          shasum -a 256 ${{ matrix.artifact_name }}.tar.gz > ${{ matrix.artifact_name }}.sha256
+
+      - name: Package archive (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          mkdir -p release-pkg
+          cp target/${{ matrix.target }}/release/${{ matrix.binary_name }} release-pkg/xchat.exe
+          cp README.md docs/USER_MANUAL.md release-pkg/
+          7z a ${{ matrix.artifact_name }}.zip ./release-pkg/*
+          sha256sum ${{ matrix.artifact_name }}.zip > ${{ matrix.artifact_name }}.sha256
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: |
+            *.tar.gz
+            *.zip
+            *.sha256
+
+  build-mobile-libraries:
+    name: Build Mobile Core Libraries (Android & iOS)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: |
+            aarch64-linux-android
+            x86_64-linux-android
+            aarch64-apple-ios
+            aarch64-apple-ios-sim
+
+      - name: Build Android Core Crate
+        run: |
+          cargo build --release -p xchat-core -p xchat-crypto
+
+      - name: Package Mobile Artifacts
+        run: |
+          mkdir -p mobile-dist/include mobile-dist/lib
+          cp README.md docs/USER_MANUAL.md mobile-dist/
+          tar -czvf xchat-mobile-core.tar.gz -C mobile-dist .
+          shasum -a 256 xchat-mobile-core.tar.gz > xchat-mobile-core.sha256
+
+      - name: Upload Mobile Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: xchat-mobile-core
+          path: |
+            xchat-mobile-core.tar.gz
+            xchat-mobile-core.sha256
+
+  publish-github-release:
+    name: Publish Release on GitHub
+    needs: [build-desktop, build-mobile-libraries]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            **/*.tar.gz
+            **/*.zip
+            **/*.sha256
+          draft: false
+          prerelease: false
