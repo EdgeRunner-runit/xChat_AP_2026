@@ -63,23 +63,24 @@ The fundamental architectural principle is:
 Physical transports (Bluetooth Low Energy, Local Wi-Fi, Wi-Fi Direct, Internet TCP/IP) carry opaque encrypted protocol envelopes. Neither relays nor eavesdroppers have plaintext access or knowledge of long-term user identities.
 
 ```text
-┌───────────────────────────────────────────────┐
-│                    UI                         │
-├───────────────────────────────────────────────┤
-│             Messaging Protocol                │
-├───────────────────────────────────────────────┤
-│       E2EE Session / Group Crypto             │
-├───────────────────────────────────────────────┤
-│      Identity + Key Management                │
-├───────────────────────────────────────────────┤
-│        Message Queue / Store Forward          │
-├───────────────────────────────────────────────┤
-│              Routing Layer                    │
-├───────────────────────────────────────────────┤
-│        Transport Abstraction Layer            │
-├──────────┬──────────┬──────────┬───────────────┤
-│ Internet │ Wi-Fi    │ Wi-FiDir │ Bluetooth     │
-└──────────┴──────────┴──────────┴───────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                            UI                               │
+├─────────────────────────────────────────────────────────────┤
+│                     Messaging Protocol                      │
+├─────────────────────────────────────────────────────────────┤
+│                 E2EE Session / Group Crypto                 │
+├─────────────────────────────────────────────────────────────┤
+│                Identity + Key Management                    │
+├─────────────────────────────────────────────────────────────┤
+│               Message Queue / Store Forward                 │
+├─────────────────────────────────────────────────────────────┤
+│           Chaumian Mixnet Pool (Shuffle + Cover)            │
+├─────────────────────────────────────────────────────────────┤
+│                 Transport Abstraction Layer                 │
+├──────────────┬──────────────┬──────────────┬────────────────┤
+│ Internet/LTE │ Cellular SMS │ Voice Audio  │ Bluetooth Mesh │
+│ Mixnet Nodes │ GSM-Safe 140B│ Call Modem   │ & Local Wi-Fi  │
+└──────────────┴──────────────┴──────────────┴────────────────┘
 ```
 
 For complete technical specifications, review the formal 50-section specification in [docs/SECURITY_ARCHITECTURE.md](docs/SECURITY_ARCHITECTURE.md).

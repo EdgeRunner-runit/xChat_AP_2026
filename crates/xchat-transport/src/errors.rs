@@ -19,6 +19,18 @@ pub enum TransportError {
     #[error("Serialization / framing error: {0}")]
     Serialization(String),
 
+    #[error("Deserialization error: {0}")]
+    Deserialization(String),
+
+    #[error("Frame is too short")]
+    FrameTooShort,
+
+    #[error("Invalid frame header")]
+    InvalidFrameHeader,
+
+    #[error("Corrupt payload / checksum mismatch")]
+    CorruptPayload,
+
     #[error("Transport type {0:?} is currently unavailable")]
     TransportUnavailable(TransportType),
 

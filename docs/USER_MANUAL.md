@@ -378,3 +378,57 @@ Use this playbook to test xChat on real hardware (phones, laptops, tablets) with
   3. Wait for the 5-minute timeout.
   4. **Expected Result:** Messages automatically vanish from RAM. Inspecting the device storage reveals zero traces.
 
+---
+
+## 7. Multi-Transport Carriers: Internet, Mobile Data, SMS, & Voice Audio Modem
+
+xChat strictly enforces that **cryptography sits above the transport layer**. This architecture allows xChat to seamlessly operate over any available medium—from offline radio mesh to cellular networks and public internet—while maintaining complete anonymity, forward secrecy, and unlinkability.
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│             xChat End-to-End Cryptographic Envelope        │
+│          (Ed25519 + X25519 + X3DH + Double Ratchet)         │
+├─────────────────────────────────────────────────────────────┤
+│         Chaumian Mixnet Buffer (Batching + Cover Traffic)   │
+├──────────────┬──────────────┬──────────────┬────────────────┤
+│ Internet/LTE │ Cellular SMS │ Voice Audio  │ Bluetooth Mesh │
+│ Mixnet Nodes │ GSM-Safe 140B│ Call Modem   │ & Local Wi-Fi  │
+└──────────────┴──────────────┴──────────────┴────────────────┘
+```
+
+### 1. Internet & Mobile Cellular Data (Chaumian Mixnet)
+When operating over cellular mobile data or the Internet, adversaries (ISPs, telcos, passive monitors) could observe packet timing and burst patterns. To defeat this:
+- Envelopes enter a **Chaumian Mix Pool buffer**.
+- Messages are collected into fixed-size batches (e.g. 4 envelopes).
+- If traffic is low, synthetic, indistinguishable **cover traffic envelopes** are automatically injected so batch sizes remain constant.
+- The batch is **cryptographically shuffled** to unlink ingress order from egress order.
+- Each packet is dispatched with a randomized **Poisson jitter delay** (20ms – 120ms).
+- **Run the Mixnet CLI simulation:**
+  ```bash
+  xchat mixnet --batch-size 4 --cover true
+  ```
+
+### 2. Cellular Telephony SMS Carrier (Zero Mobile Data / No Internet)
+When cellular data, Wi-Fi, and Bluetooth are unavailable, xChat can transmit envelopes directly over standard cellular SMS:
+- Opaque encrypted envelopes are chunked into 140-character GSM-safe multipart frames:
+  `XCHAT:v1:<msg_id>:<seq>/<total>:<hex_payload>`
+- Receiving devices reassemble chunks out-of-order and authenticate the envelope with ChaCha20-Poly1305.
+- Cellular carriers see only high-entropy random characters without phone numbers or identities bound to internal cryptographic addresses.
+- **Run the SMS carrier tool:**
+  ```bash
+  xchat sms --message "Confidential field intel over SMS carrier."
+  ```
+
+### 3. Voice Call & Airgap Acoustic Audio Modem
+When data networks and SMS are blocked or during an active voice phone call:
+- xChat modulates ciphertext into Audio Frequency Shift Keying (AFSK) tones in the standard telephone voice band (300 Hz – 3400 Hz):
+  - Mark Frequency: 1200 Hz (Binary 1)
+  - Space Frequency: 2200 Hz (Binary 0)
+  - Preamble Sync: 1700 Hz
+  - Sample Rate: 8000 Hz (Standard Telephone PCM)
+- Data can be played through the phone call speaker/microphone or across an airgap between devices.
+- **Run the Audio Modem tool:**
+  ```bash
+  xchat audio-modem --message "Secure acoustic voice modem transmission."
+  ```
+

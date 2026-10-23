@@ -9,10 +9,16 @@ use crate::errors::TransportError;
 pub enum TransportType {
     /// Wide Area Network / Internet over TCP / TLS
     InternetTcp,
+    /// Mobile Cellular Data over LTE / 5G / Mixnet
+    CellularData,
     /// Local Area Network over Wi-Fi / Multicast
     LocalWifi,
     /// Direct peer-to-peer Bluetooth Low Energy / ad-hoc radio mesh
     BluetoothMesh,
+    /// Telephony SMS base64 / hex multipart carrier frames
+    SmsCarrier,
+    /// Phone call audio acoustic FSK modem carrier / microphone-speaker airgap
+    AudioAcousticModem,
 }
 
 /// Abstract transport layer decoupled from upper cryptographic and routing layers.
