@@ -240,3 +240,104 @@ To maintain maximum privacy in high-threat environments:
 2. **Turn Off Unneeded Broadcasts:** Use xChat's rotating discovery tokens so your device cannot be tracked by third-party Bluetooth scanners.
 3. **Set Message Expiration (TTL):** Standard envelopes expire after 24 hours (86,400s) and are automatically pruned from relays and local outboxes.
 4. **Crypto-Shredding:** When deleting local messages, xChat deletes the ratcheted message key, rendering stored ciphertext unrecoverable even if the raw storage is examined.
+
+---
+
+## 6. Real-Hardware Field-Testing Playbook with Friends
+
+Use this playbook to test xChat on real hardware (phones, laptops, tablets) with friends in real-world conditions without internet:
+
+```text
+       ┌──────────────┐         ┌──────────────┐         ┌──────────────┐
+       │ Alice Phone  │         │ Friend Relay │         │  Bob Phone   │
+       │  (Room 1)    │         │  (Hallway)   │         │  (Room 3)    │
+       └──────┬───────┘         └──────┬───────┘         └──────┬───────┘
+              │                        │                        │
+              │── Encrypted BLE Hop ──>│── Encrypted BLE Hop ──>│
+              │                        │                        │
+```
+
+### Pre-Flight Checklist
+1. **Turn OFF Mobile Data & Disconnect from Internet Wi-Fi** on all test devices.
+2. Ensure **Bluetooth** is enabled.
+3. On devices testing Wi-Fi Direct: turn on a local offline personal hotspot on one phone and have the others connect to it (zero cellular data required).
+
+---
+
+### Field Test 1: Direct Offline 1-on-1 Chat (Airplane Mode)
+- **Goal:** Verify end-to-end encryption works with zero internet.
+- **Steps:**
+  1. On **Phone A (Alice)**, run `xchat app` (or `xchat daemon --port 7001`).
+  2. On **Phone B (Bob)**, run `xchat app` (or `xchat daemon --port 7002`).
+  3. Alice exports her address/bundle (`xchat keygen` or click **Air-Gap QR** in the GUI).
+  4. Bob adds Alice: `xchat contact add Alice '<ALICE_BUNDLE_JSON>'` (or pastes it into the GUI).
+  5. Alice sends: `"Hello Bob, zero internet test!"`.
+  6. **Expected Result:** Bob receives and decrypts the message in <50ms. Inspecting network traffic shows only opaque AEAD ChaCha20-Poly1305 ciphertext.
+
+---
+
+### Field Test 2: Obstacle & Wall Penetration Test
+- **Goal:** Determine physical transmission limits through concrete/wood.
+- **Steps:**
+  1. Leave Phone A in a closed room.
+  2. Walk Phone B down the hall, through 1 wall (10m), 2 walls (20m), and outside (40m).
+  3. Send test messages at each interval.
+  4. Run `xchat ping Alice` at each distance.
+  5. **Expected Result:** Instant delivery through 1–2 walls; when too far, messages are held safely in Phone B's local outbox and dispatch the moment you step back in range.
+
+---
+
+### Field Test 3: 3-Person Blind Mesh Relay (No Direct Line of Sight)
+- **Goal:** Verify that a friend in the middle relays messages without reading them.
+- **Steps:**
+  1. Alice goes to **Room 1**.
+  2. Bob goes to **Room 3** (too far for Alice's phone to reach directly).
+  3. Friend C stands in the **Hallway (Room 2)** running a Blind Relay:
+     ```bash
+     xchat daemon --port 7000 --relay
+     ```
+  4. Alice sends a secret message to Bob.
+  5. **Expected Result:** 
+     - Friend C's relay screen shows: `[Relay] Received opaque envelope ID=... Hops=1`. Friend C **cannot** see text or names.
+     - Bob receives the envelope, hop count increments to 2, and Bob decrypts the plaintext successfully!
+
+---
+
+### Field Test 4: Asynchronous Store-and-Forward (Offline Recipient)
+- **Goal:** Verify that a recipient can receive messages sent while their device was powered off.
+- **Steps:**
+  1. Bob **turns off his phone** or closes xChat.
+  2. Alice sends: `"Meet me at the park at 6 PM"`.
+  3. The relay buffers the encrypted envelope in its local store-and-forward queue.
+  4. 10 minutes later, Bob powers on his phone and opens xChat.
+  5. **Expected Result:** The relay silently flushes the buffered envelope to Bob's device. Bob decrypts the message with zero message loss.
+
+---
+
+### Field Test 5: Emergency SOS Distress Broadcast
+- **Goal:** Test high-priority community search-and-rescue broadcasting.
+- **Steps:**
+  1. Alice clicks **🚨 Emergency SOS** in the GUI or runs:
+     ```bash
+     xchat sos --message "Lost on trail near north ridge"
+     ```
+  2. **Expected Result:** All devices (Bob, Friend C, nearby relays) immediately alert:
+     ```text
+     🚨 SOS DISTRESS BEACON from xchat_...
+     Location: 37.7749, -122.4194
+     Message: "Lost on trail near north ridge"
+     ```
+
+---
+
+### Field Test 6: Ephemeral Burner Room (Zero Flash Traces)
+- **Goal:** Verify RAM-only temporary chats.
+- **Steps:**
+  1. Alice and Bob run:
+     ```bash
+     xchat burner --room team-alpha --pass pass123
+     ```
+  2. Exchange tactical messages.
+  3. Wait for the 5-minute timeout.
+  4. **Expected Result:** Messages automatically vanish from RAM. Inspecting the device storage reveals zero traces.
+
