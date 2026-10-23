@@ -74,6 +74,24 @@
 
 ## 3. Step-by-Step Usage
 
+### Step 0: Launch the Ready-to-Use App GUI
+Run:
+```bash
+xchat app
+```
+*(or `xchat gui`)*
+
+This boots your local encrypted node and automatically opens a responsive, dark-mode graphical user interface in your default browser at `http://127.0.0.1:8080`.
+- **Zero Internet Required:** Served directly by the local lightweight binary (zero external web requests).
+- **Features in GUI:**
+  - Active E2EE messaging pane with Double Ratchet status
+  - One-click **🚨 Emergency SOS** distress beacon trigger
+  - **🔥 Burner Room** RAM-only ephemeral chat
+  - **📱 Air-Gap QR** camera/modal key exchange
+  - Contact list & live peer reachability pings
+
+---
+
 ### Step 1: Generate Your Cryptographic Identity
 Run the key generation tool:
 ```bash
@@ -132,6 +150,40 @@ xchat daemon --port 7000 --relay
 You can test the entire offline mesh, transport handover, and attack defense on any computer:
 ```bash
 xchat simulate-mesh
+```
+
+---
+
+### Step 5: Broadcast an Emergency SOS Mesh Distress Beacon
+In disaster or off-grid emergency scenarios, broadcast a high-priority distress beacon to all nearby devices and relays:
+```bash
+xchat sos --message "Medical supplies required at coordinate site"
+```
+- Transmitted with maximum mesh forwarding priority.
+- Decodable by all community search-and-rescue nodes.
+
+---
+
+### Step 6: Join an Ephemeral RAM-Only Burner Room
+For temporary discussions that must leave zero trace on physical flash storage:
+```bash
+xchat burner --room tactical-alpha --pass secretpass123
+```
+- Messages exist in RAM only and automatically auto-expire.
+
+---
+
+### Step 7: Manage Saved Contacts & Ping Reachability
+Save friends' addresses and check if they are currently within direct radio range:
+```bash
+# Add contact
+xchat contact add Alice '<PREKEY_BUNDLE_JSON>'
+
+# List contacts
+xchat contact list
+
+# Ping peer over physical links
+xchat ping Alice
 ```
 
 ---

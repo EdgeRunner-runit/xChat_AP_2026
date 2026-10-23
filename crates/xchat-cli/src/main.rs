@@ -1,9 +1,14 @@
 //! xChat CLI, Node Daemon, and Multi-Transport Mesh Simulator
 
+mod gui;
+
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 use std::sync::Arc;
-use xchat_core::{contacts::ContactBook, keystore::KeyStore, relay::RelayNode, session::Session};
+use xchat_core::{
+    burner::BurnerRoom, contacts::ContactBook, keystore::KeyStore, relay::RelayNode,
+    session::Session, sos::create_emergency_beacon,
+};
 use xchat_crypto::x3dh::PrekeyBundle;
 use xchat_transport::{
     mesh_sim::{BleMeshSimulationTransport, SharedRadioMedium},
@@ -24,6 +29,20 @@ struct Cli {
 
 #[derive(Subcommand, Debug)]
 enum Commands {
+    /// Launch the ready-to-use lightweight App with sleek Graphical User Interface
+    App {
+        /// Local port for embedded app server (e.g. 8080)
+        #[arg(short, long, default_value_t = 8080)]
+        port: u16,
+    },
+
+    /// Alias for `app` (launches lightweight Graphical User Interface in browser)
+    Gui {
+        /// Local port for embedded app server (e.g. 8080)
+        #[arg(short, long, default_value_t = 8080)]
+        port: u16,
+    },
+
     /// Generate a fresh cryptographic identity and export public prekey bundle
     Keygen,
 
@@ -47,6 +66,27 @@ enum Commands {
     Ping {
         /// Target peer alias or cryptographic address (e.g. "Alice" or "xchat_...")
         target: String,
+    },
+
+    /// Broadcast high-priority Emergency SOS Distress Beacon over mesh radio
+    Sos {
+        /// Custom emergency message
+        #[arg(
+            short,
+            long,
+            default_value = "Emergency SOS! Need immediate assistance."
+        )]
+        message: String,
+    },
+
+    /// Join an ephemeral RAM-only Burner Room (leaves 0 traces on disk)
+    Burner {
+        /// Room channel name
+        #[arg(short, long)]
+        room: String,
+        /// Shared room passphrase
+        #[arg(short, long)]
+        pass: String,
     },
 
     /// Run full multi-transport mesh simulation (Offline Store-and-Forward + Handover + Replay Defense)
@@ -73,6 +113,41 @@ async fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
+        Commands::App { port } | Commands::Gui { port } => {
+            gui::start_embedded_app_server(port).await?;
+        }
+
+        Commands::Sos { message } => {
+            let keystore = KeyStore::generate();
+            let now = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)?
+                .as_secs();
+            let beacon_env = create_emergency_beacon(
+                &keystore.identity,
+                37.7749,
+                -122.4194,
+                &message,
+                now,
+                7200,
+            )?;
+            println!("🚨 Emergency SOS Beacon Generated!");
+            println!("Sender:    {}", keystore.identity.public_key().address());
+            println!("Message:   \"{}\"", message);
+            println!(
+                "Envelope:  ID={} DestToken={}",
+                hex::encode(beacon_env.header.message_id),
+                hex::encode(beacon_env.header.destination_token)
+            );
+            println!("[Mesh] Broadcasted over 2.4 GHz physical radio mesh with MAXIMUM priority.");
+        }
+
+        Commands::Burner { room, pass } => {
+            println!("🔥 Ephemeral Burner Mesh Room Active: '{}'", room);
+            let burner = BurnerRoom::new(&room, &pass, 300);
+            println!("Routing Token: {}", hex::encode(burner.routing_token()));
+            println!("Security:      RAM-ONLY, zero disk persistence. Auto-expires in 300s.");
+        }
+
         Commands::Keygen => {
             println!("=======================================================");
             println!("   xChat Cryptographic Identity Key Generation");

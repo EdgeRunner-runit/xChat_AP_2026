@@ -61,3 +61,13 @@ Build, test, verify, and document a production-grade, full-fledged implementatio
 ### Phase 7: Final Documentation & Git Commit
 - [x] Complete README and architecture guides
 - [x] Clean git commit
+
+### Phase 8: Advanced Features & Lightweight App GUI
+- [x] Emergency SOS Mesh Beacon (`xchat-core/src/sos.rs`)
+- [x] Ephemeral Burner Mesh Rooms (`xchat-core/src/burner.rs`)
+- [x] Duress PIN & Decoy Vault (`xchat-core/src/duress.rs`)
+- [x] Chunked File/Voice Carrier (`xchat-core/src/chunking.rs`)
+- [x] Cover Traffic & Noise Injection (`xchat-core/src/cover_traffic.rs`)
+- [x] Embedded Lightweight App GUI (`crates/xchat-cli/src/gui.rs`) with embedded HTML/CSS/JS frontend
+- [x] CLI integration: `xchat app`, `xchat gui`, `xchat sos`, `xchat burner`
+- [x] Verification, testing (all 30 tests passed), and release build repackaging

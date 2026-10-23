@@ -8,6 +8,8 @@ repository.workspace = true
 [dependencies]
 xchat-crypto.workspace = true
 x25519-dalek.workspace = true
+sha2.workspace = true
+hkdf.workspace = true
 tokio.workspace = true
 serde.workspace = true
 serde_json.workspace = true
