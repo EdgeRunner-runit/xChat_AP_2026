@@ -16,13 +16,34 @@
 
 ---
 
-## 2. Platform Installation & Quick Start
+## 2. Platform Installation & 1-Click Quick Start
+
+### ⚡ Universal 1-Click Auto-Detect Launchers (Recommended)
+
+xChat includes a universal auto-detection system that detects your operating system (macOS, Windows, Linux, Android), configures the binaries, sets up cryptographic identities, and automatically launches the App GUI in your browser.
+
+#### Option A: 1-Click Launchers (No terminal needed)
+- **macOS:** Download [**`xchat-setup.command`**](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/download/v0.1.0/xchat-setup.command) and double-click it in Finder. Terminal will open, auto-configure xChat, and pop open your browser to `http://127.0.0.1:4000`.
+- **Windows:** Download [**`xchat-launcher.bat`**](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/download/v0.1.0/xchat-launcher.bat) or [**`xchat-universal.bat`**](https://github.com/EdgeRunner-runit/xChat_AP_2026/releases/download/v0.1.0/xchat-universal.bat) and double-click it. It configures the environment and launches your default browser.
+- **Linux & Android (Termux):** Download and run:
+  ```bash
+  chmod +x xchat-launcher.sh && ./xchat-launcher.sh
+  ```
+
+#### Option B: Universal One-Liner (Any Unix / Mac / Linux / Android)
+```bash
+curl -fsSL https://raw.githubusercontent.com/EdgeRunner-runit/xChat_AP_2026/main/install.sh | bash
+```
+
+---
+
+### Manual Platform Setup
 
 ### macOS
-1. Download `xchat-macos-arm64.tar.gz` (Apple Silicon M1/M2/M3/M4) or Intel version.
+1. Download `xchat-v0.1.0-macos-universal.tar.gz` (Apple Silicon M1/M2/M3/M4 & Intel).
 2. Extract and move to your path:
    ```bash
-   tar -xzvf xchat-v0.1.0-macos-arm64.tar.gz
+   tar -xzvf xchat-v0.1.0-macos-universal.tar.gz
    sudo mv xchat /usr/local/bin/
    ```
 3. Test installation:
