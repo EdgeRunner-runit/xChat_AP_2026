@@ -186,6 +186,22 @@ Two critical queries in the baseline suite spilled to temporary in-memory B-tree
 
 ---
 
+### 3.3 Full Index Scans vs. Index Seeks
+
+In SQLite execution plans, there is a fundamental algorithmic distinction between:
+- **`SEARCH TABLE ... USING INDEX` ($O(\log N)$)**: The engine uses the B-tree to perform a binary search tree seek directly to the matching key prefix.
+- **`SCAN TABLE ... USING INDEX` ($O(N)$)**: The engine traverses every single leaf page of the index sequentially from start to finish.
+
+#### Baseline Scan Bottleneck in Plan 10 (Query 16 Prekey Check):
+```text
+QUERY PLAN
+|--SCAN u USING COVERING INDEX sqlite_autoindex_users_1
+`--SEARCH pb USING INDEX idx_prekeys_user_consumed (user_id=? AND is_consumed=?) LEFT-JOIN
+```
+In the baseline plan for Query 16, SQLite executes a full index scan over all users (`SCAN u`) rather than an indexed lookup. While harmless on a single-user device, this becomes an unnecessary $O(N)$ overhead in multi-identity environments. Similarly, without partial indexes, prekey checks scan consumed prekeys that are irrelevant to active key agreements. Section 4 resolves this via filtered partial indexes.
+
+---
+
 ## 4. Index Tuning & Column Ordering Corrections
 
 ### 4.1 Rectifying the Range-Ahead-of-Equality Ordering Flaw
