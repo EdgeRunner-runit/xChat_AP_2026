@@ -25,7 +25,7 @@ FROM messages m
 JOIN conversations c ON m.conversation_id = c.conversation_id
 JOIN contacts ct ON c.contact_id = ct.contact_id
 WHERE c.user_id = 'usr_alice'
-  AND m.delivery_status IN ('PENDING', 'SENT', 'DELIVERD')  -- NOTE: typo in status value (intentional baseline)
+  AND m.delivery_status IN ('PENDING', 'SENT', 'DELIVERED')
   AND m.sender_address = ct.peer_address;
 
 -- PLAN 3: Message Thread Pagination (Q3A)
