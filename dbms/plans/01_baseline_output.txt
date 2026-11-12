@@ -1,0 +1,34 @@
+QUERY PLAN
+|--SEARCH c USING INDEX idx_conversations_user_active (user_id=?)
+|--SEARCH ct USING INDEX sqlite_autoindex_contacts_1 (contact_id=?)
+|--SEARCH m USING COVERING INDEX idx_messages_conversation_sent_at (conversation_id=?) LEFT-JOIN
+|--USE TEMP B-TREE FOR GROUP BY
+`--USE TEMP B-TREE FOR ORDER BY
+QUERY PLAN
+|--SEARCH c USING INDEX idx_conversations_user_active (user_id=?)
+|--SEARCH ct USING INDEX sqlite_autoindex_contacts_1 (contact_id=?)
+`--SEARCH m USING INDEX idx_messages_conversation_sent_at (conversation_id=?)
+QUERY PLAN
+`--SEARCH messages USING INDEX idx_messages_conversation_sent_at (conversation_id=?)
+QUERY PLAN
+`--SEARCH ratchet_sessions USING INDEX sqlite_autoindex_ratchet_sessions_2 (conversation_id=?)
+QUERY PLAN
+|--SEARCH outbox_queue USING INDEX idx_outbox_queue_priority (status=? AND next_retry_at<?)
+`--USE TEMP B-TREE FOR ORDER BY
+QUERY PLAN
+`--SEARCH contacts USING INDEX sqlite_autoindex_contacts_2 (user_id=? AND peer_address=?)
+QUERY PLAN
+`--SEARCH relay_cache USING INDEX idx_relay_cache_ttl (expires_at<?)
+QUERY PLAN
+|--SEARCH u USING INDEX sqlite_autoindex_users_1 (user_id=?)
+|--SEARCH c USING INDEX idx_conversations_user_active (user_id=?)
+|--SEARCH ct USING INDEX sqlite_autoindex_contacts_1 (contact_id=?)
+|--SEARCH rs USING INDEX sqlite_autoindex_ratchet_sessions_2 (conversation_id=?) LEFT-JOIN
+|--SEARCH sk USING COVERING INDEX idx_skipped_keys_lookup (session_id=?) LEFT-JOIN
+|--SEARCH m USING COVERING INDEX idx_messages_conversation_sent_at (conversation_id=?) LEFT-JOIN
+`--USE TEMP B-TREE FOR GROUP BY
+QUERY PLAN
+`--SEARCH skipped_keys USING INDEX sqlite_autoindex_skipped_keys_1 (session_id=? AND dh_ratchet_pub=? AND message_counter=?)
+QUERY PLAN
+|--SCAN u USING COVERING INDEX sqlite_autoindex_users_1
+`--SEARCH pb USING INDEX idx_prekeys_user_consumed (user_id=? AND is_consumed=?) LEFT-JOIN
